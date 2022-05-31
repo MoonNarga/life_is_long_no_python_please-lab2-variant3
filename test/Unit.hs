@@ -80,7 +80,7 @@ specs = do
     let t = fromList [9, 2, 4]
     let t' = fromList [7, 3]
     let t'' = execState (stateConcat t') t
-    evalState stateToList t'' `shouldBe` [2,3,4,7,9]
+    evalState stateToList t'' `shouldBe` [2, 3, 4, 7, 9]
     evalState stateToList (execState stateDoSome t'') `shouldBe` [2, 3, 4, 9, 10, 13, 20]
 
 stateDoSome :: (Ord a, Num a) => State (BST a) ()
