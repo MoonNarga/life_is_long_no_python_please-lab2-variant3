@@ -3,28 +3,19 @@ module BST
     value,
     lchild,
     rchild,
-    isEmpty,
     fromList,
-    insert,
-    toList,
-    size,
-    member,
     singleton,
-    remove,
-    toBstList,
-    getIterator,
-    hasNext,
-    getNext,
-    bstFilter,
-    mapBst,
-    reduceBst,
-    insertList,
-    concatBst,
     stateInsert,
     stateRemove,
     stateIsEmpty,
-
-    )
+    stateMember,
+    stateSize,
+    stateToList,
+    stateFilter,
+    stateReduce,
+    stateMap,
+    stateConcat,
+  )
 where
 
 import Control.Monad.State
@@ -54,9 +45,6 @@ stateMember n = state $ \s -> (member n s, s)
 stateSize :: State (BST a) Int
 stateSize = state $ \s -> (size s, s)
 
--- stateFromList :: (Ord a) => [a] -> State (BST a) ()
--- stateFromList src = state $ \_ -> ((), fromList src) Empty
-
 stateToList :: State (BST a) [a]
 stateToList = state $ \s -> (toList s, s)
 
@@ -71,12 +59,6 @@ stateReduce f init = state $ \s -> (reduceBst f (getIterator s) init, s)
 
 stateConcat :: (Ord a) => BST a -> State (BST a) ()
 stateConcat t = state $ \s -> ((), concatBst s t)
-
-stateDoSome :: (Ord a, Num a) => State (BST a) ()
-stateDoSome = do
-  stateInsert 1
-  stateInsert 2
-  stateInsert 4
 
 isEmpty :: BST a -> Bool
 isEmpty Empty = True
@@ -162,7 +144,7 @@ bstFilter f it
 
 mapBst :: (a -> a) -> BST a -> BST a
 mapBst _ Empty = Empty
-mapBst f (Node n l r) = Node (f n) (mapBst f l) (mapBst f r) 
+mapBst f (Node n l r) = Node (f n) (mapBst f l) (mapBst f r)
 
 reduceBst :: (a -> a -> a) -> IteratorBST a -> a -> a
 reduceBst f it initValue
