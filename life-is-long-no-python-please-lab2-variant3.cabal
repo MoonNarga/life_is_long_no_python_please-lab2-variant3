@@ -1,5 +1,5 @@
 cabal-version:      3.6
-name:               life-is-long-no-python-please-lab2-variant3
+name:               lab2-variant3
 version:            0.1.0.0
 
 -- A short (one-line) description of the package.
@@ -40,7 +40,7 @@ library
     default-language: Haskell2010
     GHC-Options: -Wall -Werror -Wincomplete-uni-patterns -Wredundant-constraints
 
-executable life-is-long-no-python-please-lab2-variant3
+executable lab2-variant3
     main-is:          Main.hs
 
     -- Modules included in this executable, other than Main.
@@ -50,7 +50,7 @@ executable life-is-long-no-python-please-lab2-variant3
     -- other-extensions:
     build-depends:
         base,
-        life-is-long-no-python-please-lab2-variant3
+        lab2-variant3
 
     hs-source-dirs:   app
     default-language: Haskell2010
@@ -61,7 +61,7 @@ Test-Suite test-unit
     
     build-depends: 
         base,
-        life-is-long-no-python-please-lab2-variant3,
+        lab2-variant3,
         hspec
         
     hs-source-dirs:   test
@@ -75,7 +75,7 @@ Test-Suite test-PBT
         base,
         containers,
         random,
-        life-is-long-no-python-please-lab2-variant3,
+        lab2-variant3,
         QuickCheck
         
     hs-source-dirs:   test
