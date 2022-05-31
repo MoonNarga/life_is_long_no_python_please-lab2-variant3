@@ -68,7 +68,7 @@ specs = do
     value (rchild t) `shouldBe` 6
     value (lchild (rchild t)) `shouldBe` 5
     bstFilter even (getIterator t) `shouldBe` [2, 4, 6]
-    mapBst (* 2) (getIterator t) `shouldBe` [2, 4, 6, 8, 10, 12, 14]
+    toList mapBst (* 2) (getIterator t) `shouldBe` [2, 4, 6, 8, 10, 12, 14]
     reduceBst (+) (getIterator t) 0 `shouldBe` 28
     reduceBst (*) (getIterator t) 1 `shouldBe` 5040
     toList (remove 3 t) `shouldBe` [1, 2, 4, 5, 6, 7]

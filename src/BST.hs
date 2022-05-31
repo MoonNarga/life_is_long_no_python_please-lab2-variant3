@@ -21,7 +21,10 @@ module BST
     insertList,
     concatBst,
     stateInsert,
-  stateDoSome)
+    stateRemove,
+    stateIsEmpty,
+
+    )
 where
 
 import Control.Monad.State
@@ -43,10 +46,31 @@ stateRemove :: (Ord a) => a -> State (BST a) ()
 stateRemove = modify . remove
 
 stateIsEmpty :: State (BST a) Bool
-stateIsEmpty = state $ \a -> (isEmpty a, a)
+stateIsEmpty = state $ \s -> (isEmpty s, s)
 
 stateMember :: (Ord a) => a -> State (BST a) Bool
-stateMember n = state $ \a -> (member n a, a)
+stateMember n = state $ \s -> (member n s, s)
+
+stateSize :: State (BST a) Int
+stateSize = state $ \s -> (size s, s)
+
+-- stateFromList :: (Ord a) => [a] -> State (BST a) ()
+-- stateFromList src = state $ \_ -> ((), fromList src) Empty
+
+stateToList :: State (BST a) [a]
+stateToList = state $ \s -> (toList s, s)
+
+stateFilter :: (a -> Bool) -> State (BST a) [a]
+stateFilter f = state $ \s -> (bstFilter f (getIterator s), s)
+
+stateMap :: (a -> a) -> State (BST a) ()
+stateMap f = state $ \s -> ((), mapBst f s)
+
+stateReduce :: (a -> a -> a) -> a -> State (BST a) a
+stateReduce f init = state $ \s -> (reduceBst f (getIterator s) init, s)
+
+stateConcat :: (Ord a) => BST a -> State (BST a) ()
+stateConcat t = state $ \s -> ((), concatBst s t)
 
 stateDoSome :: (Ord a, Num a) => State (BST a) ()
 stateDoSome = do
@@ -136,11 +160,9 @@ bstFilter f it
   | not $ f $ value $ current it = if hasNext it then bstFilter f (getNext it) else []
   | otherwise = error "error in filter"
 
-mapBst :: (a -> a) -> IteratorBST a -> [a]
-mapBst f it
-  | hasNext it = f (value (current it)) : mapBst f (getNext it)
-  | not $ hasNext it = [f (value (current it))]
-  | otherwise = error "error in map"
+mapBst :: (a -> a) -> BST a -> BST a
+mapBst _ Empty = Empty
+mapBst f (Node n l r) = Node (f n) (mapBst f l) (mapBst f r) 
 
 reduceBst :: (a -> a -> a) -> IteratorBST a -> a -> a
 reduceBst f it initValue
