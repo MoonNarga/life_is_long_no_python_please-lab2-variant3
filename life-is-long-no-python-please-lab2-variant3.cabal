@@ -61,6 +61,7 @@ Test-Suite test-unit
     
     build-depends: 
         base,
+        mtl,
         lab2-variant3,
         hspec
         
@@ -74,6 +75,7 @@ Test-Suite test-PBT
     build-depends: 
         base,
         containers,
+        mtl,
         random,
         lab2-variant3,
         QuickCheck

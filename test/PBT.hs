@@ -19,6 +19,7 @@ import BST
     value,
   )
 import Control.Monad (liftM3)
+import Control.Monad.State
 import Data.List
 import qualified Data.Set as Set
 import System.Random (Random)
@@ -56,16 +57,16 @@ arg =
     }
 
 prop_everyElement :: [Integer] -> Bool
-prop_everyElement xs = Set.toList (Set.fromList xs) == toList (fromList xs)
+prop_everyElement xs = Set.toList (Set.fromList xs) == evalState stateToList (fromList xs)
 
 prop_concatBst :: [Integer] -> [Integer] -> Bool
-prop_concatBst xs1 xs2 = Set.toList (Set.fromList (xs1 ++ xs2)) == toList (concatBst (fromList xs1) (fromList xs2))
+prop_concatBst xs1 xs2 = Set.toList (Set.fromList (xs1 ++ xs2)) == evalState stateToList (execState (stateConcat (fromList xs1)) (fromList xs2))
 
 prop_monoid_Int :: [Integer] -> [Integer] -> [Integer] -> Bool
-prop_monoid_Int xs1 xs2 xs3 = toList (fromList xs1 <> (fromList xs2 <> fromList xs3)) == toList ((fromList xs1 <> fromList xs2) <> fromList xs3)
+prop_monoid_Int xs1 xs2 xs3 = evalState stateToList (fromList xs1 <> (fromList xs2 <> fromList xs3)) == evalState stateToList ((fromList xs1 <> fromList xs2) <> fromList xs3)
 
 prop_monoid_Str :: [String] -> [String] -> [String] -> Bool
-prop_monoid_Str xs1 xs2 xs3 = toList (fromList xs1 <> (fromList xs2 <> fromList xs3)) == toList ((fromList xs1 <> fromList xs2) <> fromList xs3)
+prop_monoid_Str xs1 xs2 xs3 = evalState stateToList (fromList xs1 <> (fromList xs2 <> fromList xs3)) == evalState stateToList ((fromList xs1 <> fromList xs2) <> fromList xs3)
 
 prop_empty :: BST Int -> Bool
 prop_empty a =

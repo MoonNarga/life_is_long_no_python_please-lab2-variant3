@@ -37,9 +37,10 @@ specs = do
     value (lchild t) `shouldBe` 2
 
   it "inserting same" $ do
-    let t = execState (stateInsert 2) (singleton int4)
+    let t = execState (stateInsert 4) (singleton int4)
     value t `shouldBe` 4
     lchild t `shouldBe` Empty
+    rchild t `shouldBe` Empty
 
   it "inserting right" $ do
     let t = execState (stateInsert 5) (singleton int4)
@@ -73,18 +74,18 @@ specs = do
     length (evalState stateToList Empty) `shouldBe` 0
 
   it "Iterating over complex tree" $
-    toList (fromList [int4, 2, 1, 3, 6, 7, 5]) `shouldBe` [1 .. 7]
+    evalState stateToList (fromList [int4, 2, 1, 3, 6, 7, 5]) `shouldBe` [1 .. 7]
 
   it "Test for do" $ do
-    let t1 = fromList [2, 4, 3]
-    let t2 = fromList [5, 1, 7]
-    let t3 = fromList [9, 8]
-    toList (concatBst t1 Empty) `shouldBe` [2, 3, 4]
-    toList (concatBst t1 t2) `shouldBe` [1, 2, 3, 4, 5, 7]
-    toList (concatBst (concatBst t1 t2) t3) == toList (concatBst t1 (concatBst t2 t3)) `shouldBe` True
+    let t = fromList [9, 2, 4]
+    let t' = fromList [7, 3]
+    let t'' = execState (stateConcat t') t
+    evalState stateToList t'' `shouldBe` [2,3,4,7,9]
+    evalState stateToList (execState stateDoSome t'') `shouldBe` [2, 3, 4, 9, 10, 13, 20]
 
 stateDoSome :: (Ord a, Num a) => State (BST a) ()
 stateDoSome = do
-  stateInsert 1
-  stateInsert 2
-  stateInsert 4
+  stateInsert 10
+  stateInsert 13
+  stateRemove 7
+  stateInsert 20

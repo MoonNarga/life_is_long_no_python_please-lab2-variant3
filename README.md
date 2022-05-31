@@ -1,4 +1,4 @@
-# CPO_life_is_long_no_python_please
+# life_is_long_no_python_please-lab2-variant3
 
 ## Description
 
@@ -21,6 +21,8 @@ mutable object (interaction with an object should modify it if applicable). All
 
 - No.3 Set based on binary-tree
 
+- Simulate `mutable` by State Monad or Free Monad
+
 ## Struct of project
 
 - The main.hs in app/ is just a file init by cabal. It doesn't matter.
@@ -35,39 +37,29 @@ mutable object (interaction with an object should modify it if applicable). All
 
 - Achieve a generator of random tree struct.
 
+- Use the `State Monad`
+
 ## Design note
 
-Fix the function `fromList`, now it will build the tree as a normal order.
-~~The function ``fromList`` generate a BST by the reverse order by the argus.
-(It really confuse me at first because I build the test cases as normal)~~
-
-Build complete pattern matching for every functions.
-
-It's really hard to understand that ``BST Int``,
-maybe like the templete in C++?
-Like ``BST<int>``.
+Fix a bug in `remove`.
 
 ## Answer for questions
 
-- What should happen, if a user puts `None` value to the data structure?
+- Compare mutable and immutable implementation
 
-    Actually there is no `None` in haskell, so that is not a problem.
-    But it's funny when it comes to `Nothing`, it's possible and legal
-    to insert `Nothing` into an `Empty` tree. Because `Nothing` is an instance
-    of `Ord`. And that would lead to error when insert another normal
-    data into the tree.
+    For what I do with Haskell, the simulate of `mutable` makes it possible
+    to write code in sequence, just like in other languages.
+    More normal, mutable implementation encapsulates functions in a
+    real object, which called methods. It shows a natural way to call them.
+    At the same time, it usually becomes redundant when we only use part of
+    the methods.
+    And the immutable implementation requires developers to have better
+    grasp of the library. And it is good for parallel computing because
+    there is no limitation of mutexes.
 
-    ![avatar](./pictures/test_of_insert_Nothing.png)
+- Note implementation restriction
 
-- About Test
-
-    We can build the unit test for our code, but when build the cases,
-    we are still following the logic we wrote the code. So it is normal that
-    we miss some situations.
-
-    PBT test may overcome this problem, it would make test more comprehensive.
-    Now, we have used the ``quickcheck`` to generate data and make some tests.
-    But there is still a problem that I don't konw how to use ``Arbitrary``.
+    So abstract the `State` is that it's hard to understanduse it and use it.
 
 ## Contribution
 

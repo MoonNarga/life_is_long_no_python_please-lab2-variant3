@@ -55,7 +55,7 @@ stateMap :: (a -> a) -> State (BST a) ()
 stateMap f = state $ \s -> ((), mapBst f s)
 
 stateReduce :: (a -> a -> a) -> a -> State (BST a) a
-stateReduce f init = state $ \s -> (reduceBst f (getIterator s) init, s)
+stateReduce f i = state $ \s -> (reduceBst f (getIterator s) i, s)
 
 stateConcat :: (Ord a) => BST a -> State (BST a) ()
 stateConcat t = state $ \s -> ((), concatBst s t)
@@ -107,8 +107,8 @@ remove n (Node node left Empty)
   | n > node = Node node left Empty
 remove n (Node node Empty right)
   | n == node = right
-  | n < node = Node node Empty (remove n right)
-  | n > node = Node node Empty right
+  | n < node = Node node Empty right
+  | n > node = Node node Empty (remove n right)
 remove n (Node node left right)
   | n == node = unionSubtrees left right
   | n < node = Node node (remove n left) right
