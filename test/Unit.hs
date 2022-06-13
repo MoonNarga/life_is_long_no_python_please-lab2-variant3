@@ -19,6 +19,7 @@ import BST
 import Control.Monad.State
 import Test.Hspec (Spec, it, shouldBe)
 import Test.Hspec.Runner (defaultConfig, hspecWith)
+import Control.Applicative (Alternative(empty))
 
 main :: IO ()
 main = hspecWith defaultConfig specs
@@ -55,20 +56,25 @@ specs = do
     value t `shouldBe` 4
 
   it "complex tree" $ do
-    let t = fromList [int4, 2, 6, 1, 3, 7, 5]
-    evalState (stateMember 3) t `shouldBe` True
-    evalState (stateMember 9) t `shouldBe` False
+    let e = Empty
+    evalState stateIsEmpty e `shouldBe` True
+    let t = fromList [int4, 2, 6, 1, 3, 7]
+    evalState stateSize t `shouldBe` 6
     value t `shouldBe` 4
     value (lchild t) `shouldBe` 2
     value (lchild (lchild t)) `shouldBe` 1
     value (rchild (lchild t)) `shouldBe` 3
     value (rchild t) `shouldBe` 6
-    value (lchild (rchild t)) `shouldBe` 5
-    evalState (stateFilter even) t `shouldBe` [2, 4, 6]
-    evalState stateToList (execState (stateMap (* 2)) t) `shouldBe` [2, 4, 6, 8, 10, 12, 14]
-    evalState (stateReduce (+) 0) t `shouldBe` 28
-    evalState (stateReduce (*) 1) t `shouldBe` 5040
-    evalState stateToList (execState (stateRemove 3) t) `shouldBe` [1, 2, 4, 5, 6, 7]
+    evalState (stateMember 3) t `shouldBe` True
+    evalState (stateMember 9) t `shouldBe` False
+    let t' = execState (stateInsert 5) t
+    value (lchild (rchild t')) `shouldBe` 5
+    evalState (stateFilter even) t' `shouldBe` [2, 4, 6]
+    evalState stateToList (execState (stateMap (* 2)) t') `shouldBe` [2, 4, 6, 8, 10, 12, 14]
+    evalState (stateReduce (+) 0) t' `shouldBe` 28
+    evalState (stateReduce (*) 1) t' `shouldBe` 5040
+    evalState stateToList (execState (stateRemove 3) t') `shouldBe` [1, 2, 4, 5, 6, 7]
+    evalState stateToList (execState (stateConcat $ fromList [16, 64]) t') `shouldBe` [1, 2, 3, 4, 5, 6, 7, 16, 64]
 
   it "Empty tree to list" $
     length (evalState stateToList Empty) `shouldBe` 0
