@@ -16,10 +16,11 @@ import BST
     stateToList,
     value,
   )
+import Control.Applicative (Alternative (empty))
 import Control.Monad.State
+import Data.Functor ()
 import Test.Hspec (Spec, it, shouldBe)
 import Test.Hspec.Runner (defaultConfig, hspecWith)
-import Control.Applicative (Alternative(empty))
 
 main :: IO ()
 main = hspecWith defaultConfig specs
@@ -88,6 +89,14 @@ specs = do
     let t'' = execState (stateConcat t') t
     evalState stateToList t'' `shouldBe` [2, 3, 4, 7, 9]
     evalState stateToList (execState stateDoSome t'') `shouldBe` [2, 3, 4, 9, 10, 13, 20]
+
+  it "Test for Functor and Applicative" $ do
+    let t = fromList [1, 3, 5]
+    let n = Node (+ 1) Empty Empty
+    evalState stateToList (fmap (+ 1) t) `shouldBe` [2, 4, 6]
+    evalState stateToList (fmap (* 2) t) `shouldBe` [2, 6, 10]
+    -- execState stateToList (Empty <*> t) `shouldBe` Empty
+    evalState stateToList (n <*> t) `shouldBe` [2, 4, 6]
 
 stateDoSome :: (Ord a, Num a) => State (BST a) ()
 stateDoSome = do

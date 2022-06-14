@@ -43,6 +43,22 @@ mutable object (interaction with an object should modify it if applicable). All
 
 Fix a bug in `remove`.
 
+Something was error when write the unit test for `Applicative`
+
+Error:
+
+![avatar](./pictures/error.png)
+
+Detail:
+
+![avatar](./pictures/detail.png)
+
+But when I test it in GHCI, it get right result:
+
+![avatar](./pictures/ghci.png)
+
+The reason is still unknown.
+
 ## Answer for questions
 
 - Compare mutable and immutable implementation

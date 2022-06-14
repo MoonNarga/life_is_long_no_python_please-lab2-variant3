@@ -20,6 +20,8 @@ where
 
 import Control.Monad.State
 import Data.Monoid ()
+import Data.Functor ()
+import Control.Applicative ()
 
 data BST t
   = Empty
@@ -142,7 +144,7 @@ bstFilter f it
   | not $ f $ value $ current it = if hasNext it then bstFilter f (getNext it) else []
   | otherwise = error "error in filter"
 
-mapBst :: (a -> a) -> BST a -> BST a
+mapBst :: (a -> b) -> BST a -> BST b
 mapBst _ Empty = Empty
 mapBst f (Node n l r) = Node (f n) (mapBst f l) (mapBst f r)
 
@@ -168,3 +170,11 @@ instance Ord a => Semigroup (BST a) where
 instance Ord a => Monoid (BST a) where
   mempty = Empty
   mappend = (<>)
+
+instance Functor BST where
+  fmap = mapBst
+
+instance Applicative BST where
+  pure a = Node a Empty Empty
+  Empty <*> _ = Empty
+  (Node f _ _) <*> arg = fmap f arg
