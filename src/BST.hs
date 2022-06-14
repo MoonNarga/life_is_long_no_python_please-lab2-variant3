@@ -18,10 +18,10 @@ module BST
   )
 where
 
-import Control.Monad.State
-import Data.Monoid ()
-import Data.Functor ()
 import Control.Applicative ()
+import Control.Monad.State
+import Data.Functor ()
+import Data.Monoid ()
 
 data BST t
   = Empty
