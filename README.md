@@ -41,8 +41,6 @@ mutable object (interaction with an object should modify it if applicable). All
 
 ## Design note
 
-Fix a bug in `remove`.
-
 Something was error when write the unit test for `Applicative`
 
 Error:
@@ -57,7 +55,12 @@ But when I test it in GHCI, it get right result:
 
 ![avatar](./pictures/ghci.png)
 
-The reason is still unknown.
+The reason seems like the type of the result is not sure, because the type of
+Empty is `BST a` but the type of t is `BST Int`. So I should specify it:
+
+![avatar](./pictures/specify.png)
+
+And then everything is OK.
 
 ## Answer for questions
 
