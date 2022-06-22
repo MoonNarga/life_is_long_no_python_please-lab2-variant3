@@ -23,12 +23,12 @@ import Control.Monad.State
 import Data.Functor ()
 import Data.Monoid ()
 
-data BST t
+data BST a
   = Empty
   | Node
-      { value :: t,
-        lchild :: BST t,
-        rchild :: BST t
+      { value :: a,
+        lchild :: BST a,
+        rchild :: BST a
       }
   deriving (Show, Eq)
 
@@ -70,7 +70,7 @@ size :: BST a -> Int
 size Empty = 0
 size (Node _ le ri) = 1 + size le + size ri
 
-member :: Ord a => a -> BST a -> Bool
+member :: (Ord a) => a -> BST a -> Bool
 member _ Empty = False
 member v (Node t le ri)
   | v == t = True
@@ -78,14 +78,14 @@ member v (Node t le ri)
   | v > t = member v ri
   | otherwise = False
 
-insert :: Ord a => a -> BST a -> BST a
+insert :: (Ord a) => a -> BST a -> BST a
 insert n Empty = Node n Empty Empty
 insert n (Node t le ri)
   | n == t = Node t le ri
   | n < t = Node t (insert n le) ri
   | otherwise = Node t le (insert n ri)
 
-fromList :: Ord a => [a] -> BST a
+fromList :: (Ord a) => [a] -> BST a
 fromList [] = Empty
 fromList x = insert (last x) (fromList (init x))
 
@@ -96,12 +96,12 @@ toList (Node n le ri) = toList le ++ [n] ++ toList ri
 singleton :: a -> BST a
 singleton n = Node n Empty Empty
 
-unionSubtrees :: BST t -> BST t -> BST t
+unionSubtrees :: BST a -> BST a -> BST a
 unionSubtrees left (Node node Empty right) = Node node left right
 unionSubtrees l (Node node left right) = Node node (unionSubtrees l left) right
 unionSubtrees _ _ = error "error in union after remove"
 
-remove :: Ord t => t -> BST t -> BST t
+remove :: (Ord a) => a -> BST a -> BST a
 remove _ Empty = Empty
 remove n (Node node left Empty)
   | n == node = left
@@ -154,20 +154,20 @@ reduceBst f it initValue
   | not $ hasNext it = f initValue (value (current it))
   | otherwise = error "error in reduce"
 
-insertList :: Ord a => BST a -> [a] -> BST a
+insertList :: (Ord a) => BST a -> [a] -> BST a
 insertList Empty xs = fromList xs
 insertList n [] = n
 insertList n (x : xs) = insertList (insert x n) xs
 
-concatBst :: Ord a => BST a -> BST a -> BST a
+concatBst :: (Ord a) => BST a -> BST a -> BST a
 concatBst Empty n = n
 concatBst n Empty = n
 concatBst n1 n2 = insertList n1 (toList n2)
 
-instance Ord a => Semigroup (BST a) where
+instance (Ord a) => Semigroup (BST a) where
   (<>) = concatBst
 
-instance Ord a => Monoid (BST a) where
+instance (Ord a) => Monoid (BST a) where
   mempty = Empty
   mappend = (<>)
 

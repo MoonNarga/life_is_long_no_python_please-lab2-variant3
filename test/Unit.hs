@@ -95,7 +95,7 @@ specs = do
     let n = Node (+ 1) Empty Empty
     evalState stateToList (fmap (+ 1) t) `shouldBe` [2, 4, 6]
     evalState stateToList (fmap (* 2) t) `shouldBe` [2, 6, 10]
-    -- execState stateToList (Empty <*> t) `shouldBe` Empty
+    execState stateToList (Empty <*> t :: BST Int) `shouldBe` Empty
     evalState stateToList (n <*> t) `shouldBe` [2, 4, 6]
 
 stateDoSome :: (Ord a, Num a) => State (BST a) ()
